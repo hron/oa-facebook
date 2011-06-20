@@ -17,35 +17,34 @@ module OmniAuth
                 <div id="fb-root"></div>
                 <script src="http://connect.facebook.net/en_US/all.js"></script>
                 <script>
-                  FB.init({ 
+                  FB.init({
                     appId:#{OmniAuth.config.facebook_app_id},
                     cookie:true,
                     status:true,
-                    xfbml:true 
+                    xfbml:true
                   });
 
-                  if (jQuery.browser.opera) {
-        	          FB.XD._transport="postmessage";
+                  if (navigator.userAgent.match(/opera/i)) {
+                    FB.XD._transport="postmessage";
                     FB.XD.PostMessage.init();
-        	        }
-        	        
-        	        function afterFBLogin() {
-        	          if ( FB.getSession() != null ) {
-        	            window.location='#{OmniAuth.config.path_prefix}/facebook?perms=#{options[:perms]}';
-        	          }        	          
-        	        };
-        	        
+                  }
+
+                  function afterFBLogin() {
+                    if ( FB.getSession() != null ) {
+                      window.location='#{OmniAuth.config.path_prefix}/facebook?perms=#{options[:perms]}';
+                    }
+                  };
                 </script>
-             
+
                 <fb:login-button onlogin="afterFBLogin();" perms="#{options[:perms]}" >
-                  #{options[:title]}                  
+                  #{options[:title]}
                 </fb:login-button>
               }
             else
               %{
                 <a title="#{options[:title]}" href="#{OmniAuth.config.path_prefix}/facebook?perms=#{options[:perms]}">
                   <img src="#{options[:image]}" alt="#{options[:title]}">
-                </a>                  
+                </a>
               }
             end
           end
