@@ -12,8 +12,10 @@ module OmniAuth
               :perms => 'email,offline_access'
             }
             options = defaults.merge!(options)
-            if options[:native]
-              %{
+
+            html_code_snippet =
+              if options[:native]
+                <<-HTML
                 <div id="fb-root"></div>
                 <script src="http://connect.facebook.net/en_US/all.js"></script>
                 <script>
@@ -39,14 +41,16 @@ module OmniAuth
                 <fb:login-button onlogin="afterFBLogin();" perms="#{options[:perms]}" >
                   #{options[:title]}
                 </fb:login-button>
-              }
-            else
-              %{
+                HTML
+              else
+                <<-HTML
                 <a title="#{options[:title]}" href="#{OmniAuth.config.path_prefix}/facebook?perms=#{options[:perms]}">
                   <img src="#{options[:image]}" alt="#{options[:title]}">
                 </a>
-              }
-            end
+                HTML
+              end
+
+            html_code_snippet.respond_to?(:html_safe) ? html_code_snippet.html_safe : html_code_snippet
           end
         end
       end
